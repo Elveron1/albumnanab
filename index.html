@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cosmic Birthday Album</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  text-shadow:0 0 6px rgba(255,255,255,0.15), 0 0 12px rgba(180,200,255,0.1);
+  font-family:'Poppins',sans-serif;
+  background:
+  radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15), transparent 40%),
+  radial-gradient(circle at 80% 70%, rgba(120,150,255,0.2), transparent 50%),
+  radial-gradient(circle at center, #0a0f2f, #02030a 80%);
+  color:white;
+  overflow-x:hidden;
+}
+
+canvas{
+  position:fixed;
+  top:0;left:0;
+  z-index:0;
+}
+
+.container{
+  position:relative;
+  z-index:2;
+  max-width:1200px;
+  margin:auto;
+  padding:40px 20px;
+}
+
+.title{
+  text-shadow:0 0 10px rgba(255,255,255,0.35), 0 0 20px rgba(120,150,255,0.25);
+  text-align:center;
+  font-family:'Playfair Display',serif;
+  font-size:2.4rem;
+  margin-bottom:10px;
+  letter-spacing:1px;
+}
+
+.title-card{
+  display:inline-block;
+  padding:18px 28px;
+  border-radius:20px;
+  background:linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.18);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.6),
+    inset 0 1px 1px rgba(255,255,255,0.2);
+}
+
+.subtitle{
+  text-shadow:0 0 6px rgba(255,255,255,0.25), 0 0 14px rgba(120,150,255,0.2);
+  text-align:center;
+  opacity:.75;
+  margin-bottom:40px;
+  font-style:italic;
+}
+
+.subtitle-card{
+  display:inline-block;
+  margin-top:12px;
+  padding:10px 20px;
+  border-radius:16px;
+  background:linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.12);
+}
+
+.subtitle{
+  text-align:center;
+  opacity:.7;
+  margin-bottom:40px;
+}
+
+.gallery{
+  column-count:3;
+  column-gap:15px;
+}
+
+.gallery img{
+  width:100%;
+  margin-bottom:15px;
+  border-radius:22px;
+  box-shadow:0 10px 30px rgba(0,0,0,.6);
+  transition:all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  display:block;
+  break-inside:avoid; /* 🔥 INI KUNCINYA */
+}
+
+/* 🔥 HOVER BARU (GLOW UNGU) */
+.gallery img:hover{
+  transform:scale(1.045) rotate(0.3deg);
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.85),
+    0 0 30px rgba(170,120,255,0.6),
+    0 0 70px rgba(140,100,255,0.4),
+    0 0 120px rgba(120,80,255,0.25);
+
+  filter:brightness(1.05);
+}
+
+.quote{
+  margin-top:50px;
+  display:flex;
+  justify-content:center;
+}
+
+.quote-box{
+  max-width:720px;
+  padding:40px;
+  text-align:center;
+  font-family:'Playfair Display',serif; letter-spacing:0.5px;
+  font-size:1.35rem;
+  line-height:1.3;
+  border-radius:15px;
+
+  background:linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03));
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+
+  border:1px solid rgba(255,255,255,0.18);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.6),
+    inset 0 1px 1px rgba(255,255,255,0.2);
+
+  transition:0.4s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+.quote-box:hover{
+  transform:translateY(-6px) scale(1.01);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.9),
+    inset 0 1px 1px rgba(255,255,255,0.3);
+}
+
+.quote-box::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg, rgba(255,0,100,0.4), rgba(0,200,255,0.4), rgba(255,255,255,0.3));
+  opacity:0;
+  transition:0.5s ease;
+  z-index:0;
+}
+
+.quote-box:hover::before{
+  opacity:0.12;
+}
+
+.quote-box::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:10px;
+  background:linear-gradient(145deg, rgba(255,255,255,0.25), transparent 40%);
+  opacity:0.6;
+  pointer-events:none;
+}
+
+.quote-box span{
+  text-shadow:0 0 8px rgba(255,255,255,0.3), 0 0 18px rgba(120,150,255,0.2);
+  position:relative;
+  z-index:1;
+}
+
+.gallery img{
+  width:100%;
+  height:auto; /* ini penting */
+  border-radius:20px;
+  display:block;
+}
+
+.aurora{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:1;
+  pointer-events:none;
+
+  background:
+    radial-gradient(circle at 30% 40%, rgba(140,80,255,0.25), transparent 60%),
+    radial-gradient(circle at 70% 60%, rgba(80,120,255,0.2), transparent 60%),
+    radial-gradient(circle at 50% 80%, rgba(200,100,255,0.15), transparent 70%);
+
+  filter:blur(60px);
+  animation:auroraMove 18s ease-in-out infinite alternate;
+}
+
+@keyframes auroraMove{
+  0%{
+    transform:translate(0,0) scale(1);
+  }
+  50%{
+    transform:translate(-50px, 30px) scale(1.1);
+  }
+  100%{
+    transform:translate(40px, -20px) scale(1.05);
+  }
+}
+
+.nebula-cursor{
+  position:fixed;
+  width:300px;
+  height:300px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:1;
+
+  background:radial-gradient(circle, rgba(150,100,255,0.35), transparent 70%);
+  filter:blur(50px);
+
+  transform:translate(-50%, -50%);
+  transition:transform 0.08s linear;
+}
+
+.comet{
+  position:fixed;
+  top:-20px;
+  width:3px;
+  height:80px; /* panjang ekor */
+  pointer-events:none;
+  z-index:1;
+
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,0),
+    rgba(180,180,255,0.6),
+    rgba(255,255,255,1)
+  );
+
+  filter:blur(1px);
+  opacity:0;
+}
+
+/* INTRO */
+#intro{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  font-family:'Playfair Display',serif;
+  cursor:pointer;
+  transition:0.8s;
+}
+
+/* LIGHTBOX */
+#lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transition:0.3s;
+  z-index:9999;
+}
+#lightbox img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:20px;
+}
+#lightbox.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* 🌌 INTRO COSMIC */
+#intro{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+/* background milkyway */
+.intro-bg{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(120,150,255,0.25), transparent 50%),
+    radial-gradient(circle at 50% 50%, #0a0f2f, #02030a 80%);
+  filter:blur(0px);
+  animation:spaceMove 20s ease-in-out infinite alternate;
+  pointer-events:none;
+}
+
+/* animasi gerak halus */
+@keyframes spaceMove{
+  0%{transform:scale(1) translate(0,0)}
+  50%{transform:scale(1.05) translate(-20px, 20px)}
+  100%{transform:scale(1.08) translate(20px, -10px)}
+}
+
+/* card elegan */
+.intro-card{
+  position:relative;
+  z-index:2;
+  padding:40px 60px;
+  border-radius:25px;
+  text-align:center;
+
+  background:linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+  backdrop-filter:blur(18px) saturate(140%);
+  border:1px solid rgba(255,255,255,0.2);
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.8),
+    0 0 60px rgba(120,150,255,0.2),
+    inset 0 1px 1px rgba(255,255,255,0.2);
+
+  animation:fadeIn 1.5s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(30px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+.intro-card h1{
+  font-family:'Playfair Display',serif;
+  font-size:2.2rem;
+  margin-bottom:10px;
+  text-shadow:0 0 12px rgba(255,255,255,0.4);
+}
+
+.intro-card p{
+  opacity:.7;
+  font-size:0.95rem;
+  margin-bottom:25px;
+}
+
+/* tombol tap */
+.tap{
+  display:inline-block;
+  padding:12px 26px;
+  border-radius:30px;
+  font-size:0.9rem;
+  letter-spacing:1px;
+
+  background:linear-gradient(135deg, rgba(140,100,255,0.3), rgba(80,150,255,0.3));
+  border:1px solid rgba(255,255,255,0.3);
+
+  box-shadow:0 0 20px rgba(140,100,255,0.4);
+  transition:0.3s;
+}
+
+.tap:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 35px rgba(140,100,255,0.7);
+}
+
+/* HIDE QUOTE AWAL */
+.hidden-quote{
+  display:none;
+}
+
+/* QUOTE INTRO (SAMA KAYAK INTRO AWAL) */
+#quoteIntro{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9998;
+  overflow:hidden;
+  opacity:0;
+  pointer-events:none;
+  transition:0.8s;
+}
+
+#quoteIntro.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.open-quote-wrap{
+  display:flex;
+  justify-content:center;
+  margin-top:40px;
+}
+
+#openQuoteBtn{
+  padding:12px 28px;
+  border-radius:30px;
+  border:1px solid rgba(255,255,255,0.3);
+  background:linear-gradient(135deg, rgba(140,100,255,0.3), rgba(80,150,255,0.3));
+  color:white;
+  font-family:'Poppins',sans-serif;
+  cursor:pointer;
+  transition:0.3s;
+  box-shadow:0 0 20px rgba(140,100,255,0.4);
+}
+
+#openQuoteBtn:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 40px rgba(140,100,255,0.7);
+}
+
+#quotePopup{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  opacity:0;
+  pointer-events:none;
+  transition:0.5s;
+}
+
+#quotePopup.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.close-btn{
+  position:absolute;
+  top:12px;
+  right:12px;
+  z-index:99999; /* 🔥 biar ga ada yg nutup */
+
+  width:40px;
+  height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:1.2rem;
+  background:rgba(0,0,0,0.4);
+  border-radius:50%;
+  cursor:pointer;
+
+  touch-action:manipulation;
+}
+
+.close-btn:hover{
+  opacity:1;
+  transform:scale(1.2);
+}
+
+.open-quote-wrap{
+  opacity:0;
+  transform:translateY(30px);
+  transition:0.8s ease;
+}
+
+.open-quote-wrap.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+@media(max-width:900px){
+  .gallery{column-count:2}
+}
+@media(max-width:600px){
+  .gallery{column-count:1}
+}
+
+/* 🔥 RESPONSIVE ALL DEVICE */
+
+/* Tablet */
+@media(max-width:900px){
+  .gallery{
+    column-count:2;
+  }
+}
+
+/* HP */
+@media(max-width:600px){
+  .gallery{
+    column-count:2; /* biar ga 1 kolom */
+  }
+}
+
+/* HP kecil banget */
+@media (max-width:400px){
+  .gallery{
+    grid-template-columns:repeat(2, 1fr);
+  }
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+
+/* 📱 RESPONSIVE INTRO */
+
+/* Tablet */
+@media (max-width:900px){
+  .intro-card{
+    padding:35px 40px;
+    border-radius:22px;
+  }
+
+  .intro-card h1{
+    font-size:1.8rem;
+  }
+
+  .intro-card p{
+    font-size:0.9rem;
+  }
+
+  .tap{
+    padding:10px 22px;
+    font-size:0.85rem;
+  }
+}
+
+/* HP normal */
+@media (max-width:600px){
+  .intro-card{
+    width:90%;
+    padding:28px 22px;
+    border-radius:20px;
+  }
+
+  .intro-card h1{
+    font-size:1.5rem;
+    line-height:1.3;
+  }
+
+  .intro-card p{
+    font-size:0.85rem;
+    line-height:1.4;
+  }
+
+  .tap{
+    padding:10px 20px;
+    font-size:0.8rem;
+  }
+}
+
+/* HP kecil banget */
+@media (max-width:400px){
+  .intro-card{
+    width:92%;
+    padding:22px 18px;
+  }
+
+  .intro-card h1{
+    font-size:1.3rem;
+  }
+
+  .intro-card p{
+    font-size:0.8rem;
+  }
+
+  .tap{
+    padding:9px 18px;
+    font-size:0.75rem;
+  }
+}
+
+/* biar card selalu center sempurna */
+#intro{
+  padding:20px;
+}
+
+/* cegah overflow aneh di layar kecil */
+.intro-card{
+  max-width:500px;
+  width:100%;
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.fade-up.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 📱 RESPONSIVE BUTTON */
+@media (max-width:600px){
+  .open-quote-wrap{
+    margin-top:30px;
+  }
+
+  #openQuoteBtn{
+    width:80%;
+    max-width:260px;
+    padding:12px 0;
+    font-size:0.85rem;
+  }
+}
+
+/* HP kecil */
+@media (max-width:400px){
+  #openQuoteBtn{
+    width:90%;
+    font-size:0.8rem;
+    padding:11px 0;
+  }
+}
+
+/* 📱 POPUP QUOTE RESPONSIVE */
+@media (max-width:600px){
+  #quotePopup{
+    padding:20px;
+  }
+
+  #quotePopup .intro-card{
+    width:100%;
+    max-width:100%;
+    padding:25px 20px;
+    border-radius:20px;
+  }
+
+  .quote-box{
+    padding:25px 18px;
+    font-size:1rem;
+    line-height:1.5;
+  }
+}
+
+/* HP kecil banget */
+@media (max-width:400px){
+  .quote-box{
+    font-size:0.9rem;
+    padding:20px 15px;
+  }
+}
+
+/* biar ga kepencet salah di mobile */
+#quotePopup{
+  padding:20px;
+}
+
+/* biar bisa scroll kalau teks panjang */
+.quote-box{
+  max-height:80vh;
+  overflow-y:auto;
+}
+
+</style>
+</head>
+<body>
+
+<div id="intro">
+  <div class="intro-bg"></div>
+
+  <div class="intro-card">
+    <h1>A Moment Awaits</h1>
+    <p>some stories are meant to be felt, not told</p>
+    <div class="tap">Tap to Begin</div>
+  </div>
+</div>
+
+<audio id="bgm" loop>
+  <source src="lagu.mp4" type="audio/mpeg">
+</audio>
+
+<div id="lightbox">
+  <img src="">
+</div>
+
+<canvas id="stars"></canvas>
+
+<div class="aurora"></div>
+
+<div class="nebula-cursor"></div>
+
+<div id="quotePopup">
+  <div class="intro-bg"></div>
+
+  <div class="intro-card">
+  <div class="close-btn" id="closeQuote">✕</div>
+    <div class="quote-box">
+      <span>
+      Tidak semua keindahan datang dengan suara.
+      Beberapa hadir… dengan cara yang tenang,
+      namun menetap paling lama.
+      <br><br>
+      Seperti kamu.
+      <br><br>
+      Di antara luasnya waktu dan segala kemungkinan,
+      semesta memilih hari ini
+      untuk menghadirkanmu ke dunia.
+      <br><br>
+      Dan entah bagaimana,
+      aku merasa beruntung
+      bisa mengenalmu di salah satu bagiannya.
+      <br><br>
+      Selamat ulang tahun.
+      <br>
+      Semoga hal-hal baik selalu menemukan jalan pulang ke kamu,
+      tanpa perlu kamu cari terlalu jauh.
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="title"><div class="title-card">A Moment Written in the Stars</div></div>
+  <div class="subtitle"><div class="subtitle-card">— celebrating the quiet beauty of your existence —</div></div>
+
+  <div class="gallery">
+  <img src="foto1.jpg" class="fade-up">
+  <img src="foto2.jpg" class="fade-up">
+  <img src="foto3.jpg" class="fade-up">
+  <img src="foto4.jpg" class="fade-up">
+  <img src="foto5.jpg" class="fade-up">
+  <img src="foto6.jpg" class="fade-up">
+  <img src="foto7.jpg" class="fade-up">
+  <img src="foto8.jpg" class="fade-up">
+  <img src="foto9.jpg" class="fade-up">
+  <img src="foto10.jpg" class="fade-up">
+  <img src="foto11.jpg" class="fade-up">
+  <img src="foto12.jpg" class="fade-up">
+  <img src="foto13.jpg" class="fade-up">
+  <img src="foto14.jpg" class="fade-up">
+  <img src="foto15.jpg" class="fade-up">
+</div>
+
+  <div class="open-quote-wrap fade-up">
+  <button id="openQuoteBtn">Read Something</button>
+</div>
+
+  <div class="quote" style="display:none;">
+    <div class="quote-box">
+      <span>
+      Tidak semua keindahan datang dengan suara.
+      Beberapa hadir… dengan cara yang tenang,
+      namun menetap paling lama.
+      <br><br>
+      Seperti kamu.
+      <br><br>
+      Di antara luasnya waktu dan segala kemungkinan,
+      semesta memilih hari ini
+      untuk menghadirkanmu ke dunia.
+      <br><br>
+      Dan entah bagaimana,
+      aku merasa beruntung
+      bisa mengenalmu di salah satu bagiannya.
+      <br><br>
+      Selamat ulang tahun.
+      <br>
+      Semoga hal-hal baik selalu menemukan jalan pulang ke kamu,
+      tanpa perlu kamu cari terlalu jauh.
+    </span>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let stars = [];
+let mouse = {x:0,y:0};
+
+window.addEventListener('mousemove',e=>{
+  mouse.x = e.x;
+  mouse.y = e.y;
+});
+
+for(let i=0;i<120;i++){
+  stars.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    size:Math.random()*2,
+    speed:Math.random()*0.5
+  });
+}
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  stars.forEach(s=>{
+    let dx = mouse.x - s.x;
+    let dy = mouse.y - s.y;
+    s.x += dx*0.0005;
+    s.y += dy*0.0005;
+
+    s.y += s.speed;
+    if(s.y>canvas.height) s.y=0;
+
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.size,0,Math.PI*2);
+    ctx.fillStyle='white';
+    ctx.fill();
+  });
+
+  requestAnimationFrame(animate);
+}
+animate();
+
+window.addEventListener('resize',()=>{
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+const nebula = document.querySelector('.nebula-cursor');
+
+window.addEventListener('mousemove', e => {
+  nebula.style.left = e.clientX + 'px';
+  nebula.style.top = e.clientY + 'px';
+});
+
+function createComet(){
+  const comet = document.createElement('div');
+  comet.classList.add('comet');
+
+  // posisi random horizontal
+  const startX = Math.random() * window.innerWidth;
+  comet.style.left = startX + 'px';
+
+  document.body.appendChild(comet);
+
+  const duration = Math.random() * 800 + 800; // cepet = natural
+
+  setTimeout(()=>{
+    comet.style.transition = `transform ${duration}ms linear, opacity 0.2s`;
+    comet.style.opacity = '1';
+    comet.style.transform = `translateY(${window.innerHeight + 100}px)`;
+  }, 20);
+
+  setTimeout(()=>{
+    comet.remove();
+  }, duration + 200);
+}
+
+// spawn random
+setInterval(()=>{
+  if(Math.random() < 0.4){
+    createComet();
+  }
+}, 700);
+
+// 🔥 INTRO + MUSIC
+const intro = document.getElementById('intro');
+const bgm = document.getElementById('bgm');
+
+intro.addEventListener('click', ()=>{
+  intro.style.opacity = '0';
+  bgm.play();
+  setTimeout(()=> intro.remove(), 800);
+});
+
+// 🔥 LIGHTBOX
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = lightbox.querySelector('img');
+
+document.querySelectorAll('.gallery img').forEach(img=>{
+  img.addEventListener('click', ()=>{
+    lightbox.classList.add('active');
+    lightboxImg.src = img.src;
+  });
+});
+
+lightbox.addEventListener('click', ()=>{
+  lightbox.classList.remove('active');
+});
+
+// 🔥 FLOATING WORDS
+const words = ["you", "calm", "beautiful", "home", "light"];
+
+function createWord(){
+  const el = document.createElement('div');
+  el.innerText = words[Math.floor(Math.random()*words.length)];
+
+  el.style.position = 'fixed';
+  el.style.left = Math.random()*100 + 'vw';
+  el.style.top = '100vh';
+  el.style.opacity = 0.2;
+  el.style.fontSize = '14px';
+  el.style.pointerEvents = 'none';
+  el.style.color = 'white';
+
+  document.body.appendChild(el);
+
+  setTimeout(()=>{
+    el.style.transition = '6s linear';
+    el.style.transform = 'translateY(-120vh)';
+  },100);
+
+  setTimeout(()=> el.remove(),6000);
+}
+
+setInterval(createWord,2000);
+
+// 🔥 EASTER EGG
+let clickCount = 0;
+
+document.body.addEventListener('click', ()=>{
+  clickCount++;
+  if(clickCount === 7){
+    alert("You are more special than you think.");
+  }
+});
+
+intro.addEventListener('click', ()=>{
+  intro.style.opacity = '0';
+  intro.style.transform = 'scale(1.1)';
+  bgm.play();
+
+  setTimeout(()=>{
+    intro.remove();
+  }, 1000);
+});
+
+// 🌌 QUOTE FLOW
+
+
+// klik open → tampilkan quote asli
+openQuoteBtn.addEventListener('click', ()=>{
+  quoteIntro.style.opacity = '0';
+  quoteIntro.style.transform = 'scale(1.1)';
+
+  setTimeout(()=>{
+    quoteIntro.remove();
+    quoteSection.style.display = 'flex';
+
+    // efek muncul halus
+    quoteSection.style.opacity = '0';
+    quoteSection.style.transform = 'translateY(30px)';
+    
+    setTimeout(()=>{
+      quoteSection.style.transition = '1s';
+      quoteSection.style.opacity = '1';
+      quoteSection.style.transform = 'translateY(0)';
+    },100);
+
+  }, 800);
+});
+
+const openBtn = document.getElementById('openQuoteBtn');
+const popup = document.getElementById('quotePopup');
+
+openBtn.addEventListener('click', ()=>{
+  popup.classList.add('active');
+});
+
+// klik di luar card = close
+popup.addEventListener('click', (e)=>{
+  if(e.target.id === 'quotePopup'){
+    popup.classList.remove('active');
+  }
+});
+
+const closeBtn = document.getElementById('closeQuote');
+
+closeBtn.addEventListener('click', ()=>{
+  popup.classList.remove('active');
+});
+
+window.addEventListener('popstate', ()=>{
+  popup.classList.remove('active');
+});
+
+const btnWrap = document.querySelector('.open-quote-wrap');
+
+window.addEventListener('scroll', ()=>{
+  if(!btnWrap) return; // biar aman
+
+  const trigger = btnWrap.getBoundingClientRect().top;
+
+  if(trigger < window.innerHeight - 50){
+    btnWrap.classList.add('show');
+  }
+});
+
+const faders = document.querySelectorAll('.fade-up');
+
+const appearOnScroll = () => {
+  faders.forEach(el => {
+    const trigger = el.getBoundingClientRect().top;
+    if(trigger < window.innerHeight - 50){
+      el.classList.add('show');
+    }
+  });
+};
+
+window.addEventListener('scroll', appearOnScroll);
+window.addEventListener('load', appearOnScroll); // biar pas langsung load ada yg kelihatan
+
+</script>
+</body>
+</html>
